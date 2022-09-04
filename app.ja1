@@ -1,0 +1,26 @@
+'use strict';
+//Require an appropriate module
+const Mongo = require('koa-mongo');
+// Use Mongo
+app.use(Mongo());
+
+//For empty GET-request
+router.get('/', async (ctx) => {
+  //Find necessary document with "find" method in collection "first_collection"
+  const result = await ctx.mongo.db('test').collection('first_collection').find({ text: "Hello, world!" }).toArray();
+  //If there is no document, add it with "insert" method
+  if (result.length === 0)
+    ctx.mongo.db('test').collection('first_collection').insert({ text: "Hello, world!" });
+  var helloWorld = await ctx.mongo.db('test').collection('first_collection').find({ text: "Hello, world!" }).toArray();
+  ctx.body = helloWorld[0].text;
+});
+
+// Similary with "named" GET-requests
+router.get('/:name', async (ctx) => {
+    const result = await ctx.mongo.db('test').collection('first_collection').find({ text: ctx.params.name }).toArray();
+    if (result.length === 0)
+        ctx.mongo.db('test').collection('first_collection').insert({ text: ctx.params.name });
+    var name = await ctx.mongo.db('test').collection('first_collection').find({ text: ctx.params.name }).toArray();
+    name = name[0].text;
+    ctx.body = `Hello, ${name}!\n`;
+});
