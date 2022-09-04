@@ -1,0 +1,37 @@
+const Koa = require("koa");
+const Router = require("koa-router");
+
+const app = new Koa();
+const router = new Router();
+
+router.get("/", async function (ctx) {
+    ctx.body = {message: "Hello World!"}
+});
+
+app.use(router.routes()).use(router.allowedMethods());
+
+app.listen(3000);
+//////////////////////////////////////////////////////
+router.get("/", async function (ctx) {
+    let name = ctx.request.query.name || "World";
+    ctx.body = {message: `Hello ${name}!`}
+});
+////////////////////////////////////////////////////
+const Koa = require("koa");
+const Router = require("koa-router");
+const BodyParser = require("koa-bodyparser");
+
+const app = new Koa();
+const router = new Router();
+
+// Use the bodyparser middlware
+app.use(BodyParser());
+
+router.post("/", async function (ctx) {
+    let name = ctx.request.body.name || "World";
+    ctx.body = {message: `Hello ${name}!`}
+});
+
+app.use(router.routes()).use(router.allowedMethods());
+
+app.listen(3000);
